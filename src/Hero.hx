@@ -25,7 +25,7 @@ class Hero extends h2d.Object {
     var direction: Direction;
 
     public function new(game: Game) {
-        super(game);
+        super();
         this.game = game;
 
         var tiles = hxd.Res.atlas.toTile();

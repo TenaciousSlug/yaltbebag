@@ -21,7 +21,7 @@ class Fire extends h2d.Object {
     var state: FireState;
 
     public function new(game: Game) {
-        super(game);
+        super();
         this.game = game;
 
         var tiles = hxd.Res.atlas.toTile();

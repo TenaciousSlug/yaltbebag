@@ -1,4 +1,4 @@
-class Game extends h2d.Object {
+class Game extends h2d.Layers {
     public var paused: Bool;
 
     public var level: Level;
@@ -10,11 +10,17 @@ class Game extends h2d.Object {
         super();
 
         paused = true;
-        level = new Level(this);
+        level = new Level();
+
         fire = new Fire(this);
         hero = new Hero(this);
         foe = new Foe(this);
-        this.addChild(level.foreground);
+
+        this.add(level.background, 0);
+        this.add(fire, 1);
+        this.add(hero, 1);
+        this.add(foe, 1);
+        this.add(level.foreground, 2);
     }
 
     public function update(dt: Float) {
@@ -25,5 +31,7 @@ class Game extends h2d.Object {
         hero.update(dt);
         fire.update(dt);
         foe.update(dt);
+
+        this.ysort(1);
     }
 }

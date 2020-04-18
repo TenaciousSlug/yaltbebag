@@ -1,12 +1,12 @@
-class Level extends h2d.Object {
+class Level {
     var walls: h2d.col.Polygons;
     public var fire: h2d.col.Circle;
+
+    public var background: h2d.Bitmap;
     public var foreground: h2d.Bitmap;
 
-    public function new(game: Game) {
-        super(game);
-
-        var background = new h2d.Bitmap(hxd.Res.level.background.toTile(), this);
+    public function new() {
+        background = new h2d.Bitmap(hxd.Res.level.background.toTile());
         foreground = new h2d.Bitmap(hxd.Res.level.foreground.toTile());
 
         fire = new h2d.col.Circle(160, 90, 12);
