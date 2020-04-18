@@ -60,4 +60,18 @@ class Level {
     public function isNearFire(x: Float, y: Float): Bool {
         return fire.contains(new h2d.col.Point(x, y));
     }
+
+    public function obstructed(ray: h2d.col.Ray): Bool {
+        for (wall in walls.polygons) {
+            var intersection = wall.rayIntersection(ray);
+            if (intersection != null) {
+                var d = ray.getDir().dot(intersection.sub(ray.getPos()));
+                if (d >= 0 && d <= ray.getDir().lengthSq()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

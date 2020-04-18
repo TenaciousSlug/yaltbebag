@@ -99,14 +99,14 @@ class Hero extends h2d.Object {
         var actualDy = 0.0;
         if (dx != 0 || dy != 0) {
             var l = speed * dt;
-            var n = 1.0 / Math.sqrt(dx*dx + dy*dy);
-            if (!game.level.checkCollision(this.x + l*n*dx, this.y + l*n*dy)) {
-                actualDx = l*n*dx;
-                actualDy = l*n*dy;
-            } else if (!game.level.checkCollision(this.x + l*dx, this.y)) {
-                actualDx = l*dx;
-            } else if (!game.level.checkCollision(this.x, this.y + l*dy)) {
-                actualDy = l*dy;
+            var d = Math.sqrt(dx*dx + dy*dy);
+            if (!game.level.checkCollision(this.x + l*dx/d, this.y + l*dy/d)) {
+                actualDx = l*dx/d;
+                actualDy = l*dy/d;
+            } else if (dx != 0 && !game.level.checkCollision(this.x + l*dx/Math.abs(dx), this.y)) {
+                actualDx = l*dx/Math.abs(dx);
+            } else if (dy != 0 && !game.level.checkCollision(this.x, this.y + l*dy/Math.abs(dy))) {
+                actualDy = l*dy/Math.abs(dy);
             }
         }
 
