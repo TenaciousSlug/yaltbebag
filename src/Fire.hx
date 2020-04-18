@@ -6,8 +6,11 @@ enum FireState {
 }
 
 class Fire extends h2d.Object {
-    static var speed = 10.0;
+    static var speed = 100.0 / 30.0;
+    static var blowStrength = 2.0;
     static var animationSpeed = 10;
+
+    var game: Game;
 
     var anim: h2d.Anim;
     var strong: Array<h2d.Tile>;
@@ -17,8 +20,9 @@ class Fire extends h2d.Object {
     var strength: Float;
     var state: FireState;
 
-    public function new() {
-        super();
+    public function new(game: Game) {
+        super(game);
+        this.game = game;
 
         var tiles = hxd.Res.character.toTile();
 
@@ -34,8 +38,8 @@ class Fire extends h2d.Object {
 
         anim = new h2d.Anim(animationSpeed);
 
-        this.x = 160;
-        this.y = 90;
+        this.x = game.level.fire.x;
+        this.y = game.level.fire.y;
 
         strength = 100;
         state = Strong;
@@ -77,5 +81,9 @@ class Fire extends h2d.Object {
             case Weak: anim.play(weak, 0);
             case Dead: anim.remove();
         }
+    }
+
+    public function blow() {
+        strength += blowStrength;
     }
 }

@@ -16,6 +16,8 @@ class Hero extends h2d.Object {
     static var speed = 60.0;
     static var animationSpeed = 10;
 
+    var game: Game;
+
     var anim: h2d.Anim;
     var standingLeft: Array<h2d.Tile>;
     var walkingLeft: Array<h2d.Tile>;
@@ -29,8 +31,9 @@ class Hero extends h2d.Object {
     var state: HeroState;
     var direction: Direction;
 
-    public function new() {
-        super();
+    public function new(game: Game) {
+        super(game);
+        this.game = game;
 
         var characterTiles = hxd.Res.character.toTile();
 
@@ -73,7 +76,7 @@ class Hero extends h2d.Object {
         anim = new h2d.Anim(animationSpeed, this);
 
         this.x = 160;
-        this.y = 180;
+        this.y = 140;
 
         state = Standing;
         direction = Right;
@@ -99,36 +102,42 @@ class Hero extends h2d.Object {
             dy++;
         }
 
-        this.x += speed * dx * dt;
-        this.y += speed * dy * dt;
+        var actualDx = 0.0;
+        var actualDy = 0.0;
+        if (dx != 0 || dy != 0) {
+            var l = speed * dt;
+            var n = 1.0 / Math.sqrt(dx*dx + dy*dy);
+            if (!game.level.checkCollision(this.x + l*n*dx, this.y + l*n*dy)) {
+                actualDx = l*n*dx;
+                actualDy = l*n*dy;
+            } else if (!game.level.checkCollision(this.x + l*dx, this.y)) {
+                actualDx = l*dx;
+            } else if (!game.level.checkCollision(this.x, this.y + l*dy)) {
+                actualDy = l*dy;
+            }
+        }
 
-        if (this.x < 0) {
-            this.x = 0;
-        }
-        if (this.x > 320) {
-            this.x = 320;
-        }
-        if (this.y < 0) {
-            this.y = 0;
-        }
-        if (this.y > 180) {
-            this.y = 180;
-        }
+        this.x += actualDx;
+        this.y += actualDy;
 
-        if (dx > 0) {
+        if (actualDx > 0) {
             state = Walking;
             direction = Right;
-        } else if (dx < 0) {
+        } else if (actualDx < 0) {
             state = Walking;
             direction = Left;
-        } else if (dy > 0) {
+        } else if (actualDy > 0) {
             state = Walking;
             direction = Down;
-        } else if (dy < 0) {
+        } else if (actualDy < 0) {
             state = Walking;
             direction = Up;
         } else {
             state = Standing;
+        }
+
+        if(Key.isPressed(Key.SPACE) && game.level.isNearFire(this.x, this.y)) {
+            game.fire.blow();
         }
 
         if (state != previousState || direction != previousDirection) {

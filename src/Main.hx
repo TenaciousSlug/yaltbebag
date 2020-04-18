@@ -1,55 +1,34 @@
 class Main extends hxd.App {
-    var started: Bool;
     var titleScreen: TitleScreen;
-    var hero: Hero;
-    var fire: Fire;
+    var game: Game;
 
     override function init() {
-        started = false;
-
         s2d.scaleMode = h2d.ScaleMode.Fixed(320, 180, 2);
         hxd.Res.initEmbed();
 
         titleScreen = new TitleScreen(this.startGame);
-        hero = new Hero();
-        fire = new Fire();
+        game = new Game();
 
-        s2d.addChild(titleScreen);
+        //s2d.addChild(titleScreen);
+        startGame();
     }
 
     private function startGame() {
-        if (started) {
-            return;
-        }
+        game.paused = false;
 
         s2d.removeChild(titleScreen);
-
-        s2d.addChild(hero);
-        s2d.addChild(fire);
-
-        started = true;
+        s2d.addChild(game);
     }
 
     private function endGame() {
-        if (!started) {
-            return;
-        }
+        game.paused = true;
 
-        started = false;
-
-        s2d.removeChild(hero);
-        s2d.removeChild(fire);
-
+        s2d.removeChild(game);
         s2d.addChild(titleScreen);
     }
 
     override function update(dt: Float) {
-        if (!started) {
-            return;
-        }
-
-        hero.update(dt);
-        fire.update(dt);
+        game.update(dt);
     }
 
     static function main() {
