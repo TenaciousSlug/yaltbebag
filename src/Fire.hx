@@ -24,7 +24,7 @@ class Fire extends h2d.Object {
         super(game);
         this.game = game;
 
-        var tiles = hxd.Res.character.toTile();
+        var tiles = hxd.Res.atlas.toTile();
 
         strong = [
             tiles.sub(0, 256, 32, 32, -16, -27),

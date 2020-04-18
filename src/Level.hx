@@ -50,7 +50,7 @@ class Level extends h2d.Object {
     }
 
     public function checkCollision(x: Float, y: Float): Bool {
-        if (x <= 0 || x >= 320 || y <= 0 || y >= 180) {
+        if (x <= 5 || x >= 320 - 5 || y <= 0 || y >= 180) {
             return true;
         }
 

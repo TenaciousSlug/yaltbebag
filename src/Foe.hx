@@ -1,13 +1,15 @@
 import hxd.Key;
 
-enum HeroState {
+enum FoeState {
     Standing;
     Walking;
 }
 
-class Hero extends h2d.Object {
-    static var speed = 60.0;
-    static var animationSpeed = 10;
+class Foe extends h2d.Object {
+    static var speed = 30.0;
+    static var animationSpeed = 5;
+    static var runningSpeed = 70.0;
+    static var runningAnimationSpeed = 12;
 
     var game: Game;
 
@@ -21,7 +23,7 @@ class Hero extends h2d.Object {
     var standingDown: Array<h2d.Tile>;
     var walkingDown: Array<h2d.Tile>;
 
-    var state: HeroState;
+    var state: FoeState;
     var direction: Direction;
 
     public function new(game: Game) {
@@ -31,45 +33,45 @@ class Hero extends h2d.Object {
         var tiles = hxd.Res.atlas.toTile();
 
         standingRight = [
-            tiles.sub(0, 0, 32, 32, -16, -27)
+            tiles.sub(0, 128, 32, 32, -16, -27)
         ];
         walkingRight = [
             for (i in 1...7) {
-                tiles.sub(i * 32, 0, 32, 32, -16, -27);
+                tiles.sub(i * 32, 128, 32, 32, -16, -27);
             }
         ];
 
         standingLeft = [
-            tiles.sub(0, 32, 32, 32, -16, -27)
+            tiles.sub(0, 160, 32, 32, -16, -27)
         ];
         walkingLeft = [
             for (i in 1...7) {
-                tiles.sub(i * 32, 32, 32, 32, -16, -27);
+                tiles.sub(i * 32, 160, 32, 32, -16, -27);
             }
         ];
 
         standingDown = [
-            tiles.sub(0, 64, 32, 32, -16, -27)
+            tiles.sub(0, 192, 32, 32, -16, -27)
         ];
         walkingDown = [
             for (i in 0...4) {
-                tiles.sub(i * 32, 64, 32, 32, -16, -27);
+                tiles.sub(i * 32, 192, 32, 32, -16, -27);
             }
         ];
 
         standingUp = [
-            tiles.sub(0, 96, 32, 32, -16, -27)
+            tiles.sub(0, 224, 32, 32, -16, -27)
         ];
         walkingUp = [
             for (i in 0...4) {
-                tiles.sub(i * 32, 96, 32, 32, -16, -27);
+                tiles.sub(i * 32, 224, 32, 32, -16, -27);
             }
         ];
 
         anim = new h2d.Anim(animationSpeed, this);
 
-        this.x = 160;
-        this.y = 140;
+        this.x = 30;
+        this.y = 40;
 
         state = Standing;
         direction = Right;
@@ -80,20 +82,9 @@ class Hero extends h2d.Object {
         var previousState = state;
         var previousDirection = direction;
 
-        var dx = 0;
+        // TODO: determine these, add running state
+        var dx = 1;
         var dy = 0;
-        if(Key.isDown(Key.LEFT) || Key.isDown("Q".code) || Key.isDown("A".code)) {
-            dx--;
-        }
-        if(Key.isDown(Key.RIGHT) || Key.isDown("D".code)) {
-            dx++;
-        }
-        if(Key.isDown(Key.UP) || Key.isDown("Z".code) || Key.isDown("W".code)) {
-            dy--;
-        }
-        if(Key.isDown(Key.DOWN) || Key.isDown("S".code)) {
-            dy++;
-        }
 
         var actualDx = 0.0;
         var actualDy = 0.0;
@@ -127,10 +118,6 @@ class Hero extends h2d.Object {
             direction = Up;
         } else {
             state = Standing;
-        }
-
-        if(Key.isPressed(Key.SPACE) && game.level.isNearFire(this.x, this.y)) {
-            game.fire.blow();
         }
 
         if (state != previousState || direction != previousDirection) {

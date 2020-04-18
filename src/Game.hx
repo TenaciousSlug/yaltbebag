@@ -4,6 +4,7 @@ class Game extends h2d.Object {
     public var level: Level;
     public var fire: Fire;
     public var hero: Hero;
+    public var foe: Foe;
 
     public function new() {
         super();
@@ -12,6 +13,7 @@ class Game extends h2d.Object {
         level = new Level(this);
         fire = new Fire(this);
         hero = new Hero(this);
+        foe = new Foe(this);
         this.addChild(level.foreground);
     }
 
@@ -22,5 +24,6 @@ class Game extends h2d.Object {
 
         hero.update(dt);
         fire.update(dt);
+        foe.update(dt);
     }
 }
