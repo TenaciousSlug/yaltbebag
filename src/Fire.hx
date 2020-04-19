@@ -71,6 +71,7 @@ class Fire {
             if (blow) {
                 strength += blowStrength;
                 anim.speed = blowAnimationSpeed;
+                game.playBlowSound();
             } else {
                 strength -= speed * dt;
             }
@@ -100,6 +101,8 @@ class Fire {
         anim.speed = blowAnimationSpeed;
         state = Strong;
         setAnim();
+
+        game.playBlowSound();
     }
 
     private function setAnim() {

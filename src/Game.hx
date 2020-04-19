@@ -24,7 +24,7 @@ class Game extends h2d.Layers {
     public var state: GameState;
 
     public var blowSound: hxd.res.Sound;
-    public var fireSound: hxd.res.Sound;
+    public var fireChannel: hxd.snd.Channel;
 
     public function new(previousScore: String) {
         super();
@@ -95,8 +95,9 @@ class Game extends h2d.Layers {
 
         if(hxd.res.Sound.supportedFormat(Wav)){
             blowSound = hxd.Res.sounds.blow;
-            fireSound = hxd.Res.sounds.fire;
-            fireSound.play(true);
+            var fireSound = hxd.Res.sounds.fire;
+            fireChannel = fireSound.play(true);
+            fireChannel.volume = 1.0;
         }
     }
 
@@ -123,6 +124,9 @@ class Game extends h2d.Layers {
 
         this.ysort(1);
         lightShader.strength = fire.strength / 100;
+        if (fireChannel != null) {
+            fireChannel.volume = fire.strength / 100;
+        }
     }
 
     public function updatePlaying(dt: Float) {
@@ -137,10 +141,6 @@ class Game extends h2d.Layers {
         foesSpawner.update(dt);
         fire.update(dt, blow);
         timer.update(dt);
-
-        if (blow && blowSound != null) {
-            blowSound.play();
-        }
     }
 
     public function updateBeforeStart(dt: Float) {
@@ -178,10 +178,6 @@ class Game extends h2d.Layers {
             fire.magicBlow();
             helpMessage.text = "";
 
-            if (blow && blowSound != null) {
-                blowSound.play();
-            }
-
             startGame();
             return;
         }
@@ -194,6 +190,12 @@ class Game extends h2d.Layers {
             }
         } else {
             helpMessage.text = "The light is getting dimmer, I should revive the fire.";
+        }
+    }
+
+    public function playBlowSound() {
+        if (blowSound != null) {
+            blowSound.play(0.5);
         }
     }
 
