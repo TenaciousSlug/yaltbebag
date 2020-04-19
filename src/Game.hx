@@ -9,6 +9,7 @@ class Game extends h2d.Layers {
     public var fire: Fire;
     public var hero: Hero;
     public var foe: Foe;
+    public var foesSpawner: FoesSpawner;
     public var timer: Timer;
     public var lightShader: LightShader;
     public var title: h2d.Bitmap;
@@ -25,6 +26,7 @@ class Game extends h2d.Layers {
         fire = new Fire(this);
         hero = new Hero(this);
         foe = new Foe(this);
+        foesSpawner = new FoesSpawner(this);
         timer = new Timer();
 
         title = new h2d.Bitmap(hxd.Res.title.toTile());
@@ -68,11 +70,13 @@ class Game extends h2d.Layers {
         fire.wood.filter = filter;
         hero.filter = filter;
         foe.filter = filter;
+        foesSpawner.filter = filter;
         level.foreground.filter = filter;
     }
 
     public function start() {
         this.add(foe, 1);
+        this.add(foesSpawner, 1);
         this.add(timer, 3);
         this.removeChild(title);
         this.removeChild(spaceToStart);
@@ -82,6 +86,17 @@ class Game extends h2d.Layers {
     }
 
     public function update(dt: Float) {
+        if (fire.isDead()) {
+            paused = true;
+            hero.lookDown();
+            foesSpawner.update(dt);
+        }
+
+        if (foesSpawner.isDone() || foe.isNearHero()) {
+            var time = timer.getText();
+            this.end('You kept\nthe fire alive\nfor $time');
+        }
+
         if (paused) {
             fader.alpha = Math.max(0, fader.alpha - dt / fadeInDuration);
             if (Key.isPressed(Key.SPACE)) {
@@ -94,11 +109,6 @@ class Game extends h2d.Layers {
         fire.update(dt);
         foe.update(dt);
         timer.update(dt);
-
-        if (foe.isNearHero() || fire.isDead()) {
-            var time = timer.getText();
-            this.end('You kept\nthe fire alive\nfor $time');
-        }
 
         this.ysort(1);
         lightShader.strength = fire.strength / 100;

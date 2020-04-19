@@ -137,6 +137,11 @@ class Hero extends h2d.Object {
         }
     }
 
+    public function lookDown() {
+        direction = Down;
+        setAnim();
+    }
+
     private function setAnim() {
         switch [state, direction] {
             case [Standing, Right]: anim.play(standingRight, 0);
