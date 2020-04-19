@@ -2,7 +2,7 @@ SRC_DIR = src
 BUILD_DIR = build
 RELEASE_DIR = build/release
 DATA_DIR = data
-TARGET_NAME = ld46
+TARGET_NAME = yaltebag
 
 HAXEFLAGS = --class-path ${SRC_DIR} --main Main --library heaps -D resourcesPath=data/assets
 
