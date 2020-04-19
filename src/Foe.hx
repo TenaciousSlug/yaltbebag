@@ -60,20 +60,20 @@ class Foe extends h2d.Object {
         ];
 
         standingDown = [
-            tiles.sub(0, 192, 32, 32, -16, -27)
+            tiles.sub(128, 64, 32, 32, -16, -27)
         ];
         walkingDown = [
             for (i in 0...4) {
-                tiles.sub(i * 32, 192, 32, 32, -16, -27);
+                tiles.sub(128 + i * 32, 64, 32, 32, -16, -27);
             }
         ];
 
         standingUp = [
-            tiles.sub(0, 224, 32, 32, -16, -27)
+            tiles.sub(128, 96, 32, 32, -16, -27)
         ];
         walkingUp = [
             for (i in 0...4) {
-                tiles.sub(i * 32, 224, 32, 32, -16, -27);
+                tiles.sub(128 + i * 32, 96, 32, 32, -16, -27);
             }
         ];
 

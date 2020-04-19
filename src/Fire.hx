@@ -31,21 +31,21 @@ class Fire {
 
         strong = [
             for (i in 0...4) {
-                tiles.sub(i * 32, 256, 32, 32, -16, -27);
+                tiles.sub(i * 32, 192, 32, 32, -16, -27);
             }
         ];
         medium = [
             for (i in 0...4) {
-                tiles.sub(i * 32, 288, 32, 32, -16, -27);
+                tiles.sub(i * 32, 224, 32, 32, -16, -27);
             }
         ];
         weak = [
             for (i in 0...4) {
-                tiles.sub(i * 32, 320, 32, 32, -16, -27);
+                tiles.sub(128 + i * 32, 192, 32, 32, -16, -27);
             }
         ];
         dead = [
-            tiles.sub(32, 352, 32, 32, -16, -27)
+            tiles.sub(160, 224, 32, 32, -16, -27)
         ];
 
         anim = new h2d.Anim(animationSpeed);
@@ -55,7 +55,7 @@ class Fire {
             anim.speed = Math.ffloor(animationSpeed + (anim.speed - animationSpeed) / 2);
         }
 
-        wood = new h2d.Bitmap(tiles.sub(0, 352, 32, 32, -16, -27));
+        wood = new h2d.Bitmap(tiles.sub(128, 224, 32, 32, -16, -27));
         wood.x = game.level.nearFire.x;
         wood.y = game.level.nearFire.y;
 
