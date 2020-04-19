@@ -12,10 +12,11 @@ class Game extends h2d.Layers {
     public var timer: Timer;
     public var lightShader: LightShader;
     public var title: h2d.Bitmap;
+    public var message: h2d.Text;
     public var spaceToStart: h2d.Text;
     public var fader: h2d.Graphics;
 
-    public function new() {
+    public function new(previousScore: String) {
         super();
 
         paused = true;
@@ -29,6 +30,14 @@ class Game extends h2d.Layers {
         title = new h2d.Bitmap(hxd.Res.title.toTile());
 
         var font : h2d.Font = hxd.res.DefaultFont.get();
+
+        message = new h2d.Text(font);
+        message.text = previousScore;
+        message.textAlign = Center;
+        message.textColor = 0x000000;
+        message.x = 160;
+        message.y = 96;
+
         spaceToStart = new h2d.Text(font);
         spaceToStart.text = "Press SPACE to start";
         spaceToStart.textAlign = Center;
@@ -48,6 +57,7 @@ class Game extends h2d.Layers {
         this.add(level.foreground, 2);
         this.add(title, 3);
         this.add(spaceToStart, 3);
+        this.add(message, 3);
         this.add(fader, 4);
 
         lightShader = new LightShader();
@@ -66,6 +76,7 @@ class Game extends h2d.Layers {
         this.add(timer, 3);
         this.removeChild(title);
         this.removeChild(spaceToStart);
+        this.removeChild(message);
         this.removeChild(fader);
         paused = false;
     }
@@ -85,12 +96,13 @@ class Game extends h2d.Layers {
         timer.update(dt);
 
         if (foe.isNearHero() || fire.isDead()) {
-            this.end();
+            var time = timer.getText();
+            this.end('You kept\nthe fire alive\nfor $time');
         }
 
         this.ysort(1);
         lightShader.strength = fire.strength / 100;
     }
 
-    public dynamic function end() {}
+    public dynamic function end(message: String) {}
 }

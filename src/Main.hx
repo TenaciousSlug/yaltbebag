@@ -5,15 +5,15 @@ class Main extends hxd.App {
         s2d.scaleMode = h2d.ScaleMode.Fixed(320, 180, 2);
         hxd.Res.initEmbed();
 
-        newGame();
+        newGame("");
     }
 
-    private function newGame() {
+    private function newGame(previousScore: String) {
         if (game != null) {
             s2d.removeChild(game);
         }
 
-        game = new Game();
+        game = new Game(previousScore);
         game.end = this.newGame;
 
         s2d.addChild(game);
