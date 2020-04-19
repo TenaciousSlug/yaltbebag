@@ -6,7 +6,7 @@ enum FoeAnimState {
 }
 
 enum FoeState {
-    Patroling;
+    Patroling(patrolPoint: Int);
     Following(destX: Float, destY: Float);
     Looking(delay: Float);
 }
@@ -81,7 +81,7 @@ class Foe extends h2d.Object {
         this.x = 30;
         this.y = 40;
 
-        state = Patroling;
+        state = Looking(lookingDelay);
         animState = Standing;
         direction = Right;
         setAnim();
@@ -114,12 +114,18 @@ class Foe extends h2d.Object {
                 dx = destX - this.x;
                 dy = destY - this.y;
             }
-        case Patroling:
+        case Patroling(dest):
             speed = walkingSpeed;
             anim.speed = walkingAnimationSpeed;
-            // TODO:
-            dx = 1.0;
-            dy = 0.0;
+
+            var destX = game.level.patrolPoints[dest].x;
+            var destY = game.level.patrolPoints[dest].y;
+            if (Math.abs(this.x - destX) < 1 && Math.abs(this.y - destY) < 1) {
+                state = Patroling(game.level.neighbourPatrolPoint(dest));
+            } else {
+                dx = destX - this.x;
+                dy = destY - this.y;
+            }
         case Looking(delay):
             if (delay > lookingDelay / 2) {
                 direction = Right;
@@ -127,7 +133,7 @@ class Foe extends h2d.Object {
                 direction = Left;
             }
             if (delay < 0) {
-                state = Patroling;
+                state = Patroling(game.level.closestPatrolPoint(this.x, this.y));
             } else {
                 state = Looking(delay - dt);
             }

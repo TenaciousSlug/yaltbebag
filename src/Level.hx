@@ -5,6 +5,9 @@ class Level {
     public var background: h2d.Bitmap;
     public var foreground: h2d.Bitmap;
 
+    public var patrolPoints: Array<h2d.col.Point>;
+    public var patrolNeighbours: Array<Array<Int>>;
+
     public function new() {
         background = new h2d.Bitmap(hxd.Res.level.background.toTile());
         foreground = new h2d.Bitmap(hxd.Res.level.foreground.toTile());
@@ -47,6 +50,39 @@ class Level {
                 new h2d.col.Point(162 + 5, 84),
             ]),
         ]);
+
+        patrolPoints = [
+            new h2d.col.Point(20, 40),
+            new h2d.col.Point(136, 40),
+            new h2d.col.Point(208, 40),
+            new h2d.col.Point(300, 40),
+
+            new h2d.col.Point(80, 88),
+            new h2d.col.Point(136, 88),
+            new h2d.col.Point(208, 88),
+
+            new h2d.col.Point(20, 168),
+            new h2d.col.Point(80, 168),
+            new h2d.col.Point(136, 168),
+            new h2d.col.Point(208, 168),
+            new h2d.col.Point(300, 168),
+        ];
+        patrolNeighbours = [
+            [1, 7],
+            [0, 2, 5],
+            [1, 3, 6],
+            [2, 11],
+
+            [5, 8],
+            [1, 4, 9],
+            [2, 10],
+
+            [0, 8],
+            [4, 7, 9],
+            [5, 8, 10],
+            [6, 9, 11],
+            [3, 10],
+        ];
     }
 
     public function checkCollision(x: Float, y: Float): Bool {
@@ -73,5 +109,26 @@ class Level {
         }
 
         return false;
+    }
+
+    public function closestPatrolPoint(x: Float, y: Float): Int {
+        var point = new h2d.col.Point(x, y);
+
+        var closestIndex = 0;
+        var closestDistance = patrolPoints[0].distanceSq(point);
+        for (i in 1...patrolPoints.length) {
+            var distance = patrolPoints[i].distanceSq(point);
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestIndex = i;
+            }
+        }
+
+        return closestIndex;
+    }
+
+    public function neighbourPatrolPoint(patrolPoint: Int): Int {
+        var index = Std.random(patrolNeighbours[patrolPoint].length);
+        return patrolNeighbours[patrolPoint][index];
     }
 }
