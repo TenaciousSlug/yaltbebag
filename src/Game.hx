@@ -1,11 +1,13 @@
-class Game extends h2d.Layers {
+class Game extends h2d.Object {
     public var paused: Bool;
 
+    public var layers: h2d.Layers;
     public var level: Level;
     public var fire: Fire;
     public var hero: Hero;
     public var foe: Foe;
     public var timer: Timer;
+    public var lightShader: LightShader;
 
     public function new() {
         super();
@@ -18,12 +20,19 @@ class Game extends h2d.Layers {
         foe = new Foe(this);
         timer = new Timer();
 
-        this.add(level.background, 0);
-        this.add(fire, 1);
-        this.add(hero, 1);
-        this.add(foe, 1);
-        this.add(level.foreground, 2);
-        this.add(timer, 3);
+        layers = new h2d.Layers(this);
+
+        layers.add(level.background, 0);
+        layers.add(fire, 1);
+        layers.add(hero, 1);
+        layers.add(foe, 1);
+        layers.add(level.foreground, 2);
+
+        lightShader = new LightShader();
+        lightShader.strength = 1.0;
+        layers.filter = new h2d.filter.Shader(lightShader);
+
+        this.addChild(timer);
     }
 
     public function update(dt: Float) {
@@ -40,7 +49,8 @@ class Game extends h2d.Layers {
             this.end();
         }
 
-        this.ysort(1);
+        layers.ysort(1);
+        lightShader.strength = fire.strength / 100;
     }
 
     public dynamic function end() {}
