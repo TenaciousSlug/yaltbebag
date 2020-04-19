@@ -4,7 +4,6 @@ enum GameState {
     WaitingToStart;
     WaitingToStartTutorial;
     TutorialFire;
-    PitchBlack;
     Playing;
 }
 
@@ -14,7 +13,6 @@ class Game extends h2d.Layers {
     public var level: Level;
     public var fire: Fire;
     public var hero: Hero;
-    public var foe: Foe;
     public var foesSpawner: FoesSpawner;
     public var timer: Timer;
     public var lightShader: LightShader;
@@ -37,7 +35,6 @@ class Game extends h2d.Layers {
 
         fire = new Fire(this);
         hero = new Hero(this);
-        foe = new Foe(this);
         foesSpawner = new FoesSpawner(this);
         timer = new Timer();
 
@@ -50,7 +47,7 @@ class Game extends h2d.Layers {
         message.textAlign = Center;
         message.textColor = 0x000000;
         message.x = 160;
-        message.y = 96;
+        message.y = 108;
 
         helpMessage = new h2d.Text(font);
         helpMessage.text = "";
@@ -90,7 +87,6 @@ class Game extends h2d.Layers {
         level.background.filter = filter;
         fire.wood.filter = filter;
         hero.filter = filter;
-        foe.filter = filter;
         foesSpawner.filter = filter;
         level.foreground.filter = filter;
     }
@@ -103,7 +99,7 @@ class Game extends h2d.Layers {
     }
 
     public function startGame() {
-        this.add(foe, 1);
+        foesSpawner.spawnAt(30, 40);
         this.add(timer, 3);
         state = Playing;
     }
@@ -113,7 +109,6 @@ class Game extends h2d.Layers {
             case WaitingToStart: updateBeforeStart(dt);
             case WaitingToStartTutorial: updateBeforeTutorialStart(dt);
             case TutorialFire: updateTutorialFire(dt);
-            case PitchBlack: updatePitchBlack(dt);
             case Playing: updatePlaying(dt);
         }
 
@@ -122,19 +117,15 @@ class Game extends h2d.Layers {
     }
 
     public function updatePlaying(dt: Float) {
-        if (foe.isNearHero()) {
+        if (foesSpawner.anyNearHero()) {
             var time = timer.getText();
-            end('You kept\nthe fire alive\nfor $time');
+            end('You survived\nfor $time');
         }
 
         hero.update(dt);
-        foe.update(dt);
+        foesSpawner.update(dt);
         fire.update(dt, Key.isPressed(Key.SPACE) && level.isNearFire(hero.x, hero.y));
         timer.update(dt);
-
-        if (fire.isDead()) {
-            state = PitchBlack;
-        }
     }
 
     public function updateBeforeStart(dt: Float) {
@@ -185,16 +176,6 @@ class Game extends h2d.Layers {
         } else {
             helpMessage.text = "The light is getting dimmer, I should revive the fire.";
         }
-    }
-
-    public function updatePitchBlack(dt: Float) {
-        if (foesSpawner.isDone()) {
-            var time = timer.getText();
-            end('You kept\nthe fire alive\nfor $time');
-        }
-
-        hero.lookDown();
-        foesSpawner.update(dt);
     }
 
     public dynamic function end(message: String) {}

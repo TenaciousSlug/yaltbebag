@@ -79,9 +79,6 @@ class Foe extends h2d.Object {
 
         anim = new h2d.Anim(walkingAnimationSpeed, this);
 
-        this.x = 30;
-        this.y = 40;
-
         state = Looking(lookingDelay);
         animState = Standing;
         direction = Right;
