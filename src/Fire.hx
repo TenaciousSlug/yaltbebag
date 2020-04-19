@@ -6,7 +6,7 @@ enum FireState {
 }
 
 class Fire extends h2d.Object {
-    static var speed = 100.0 / 30.0;
+    static var speed = 100.0 / 20.0;
     static var blowStrength = 2.0;
     static var animationSpeed = 10;
 
@@ -17,7 +17,7 @@ class Fire extends h2d.Object {
     var medium: Array<h2d.Tile>;
     var weak: Array<h2d.Tile>;
 
-    var strength: Float;
+    public var strength: Float;
     var state: FireState;
 
     public function new(game: Game) {
@@ -84,6 +84,12 @@ class Fire extends h2d.Object {
     }
 
     public function blow() {
-        strength += blowStrength;
+        if (state != Dead) {
+            strength += blowStrength;
+        }
+    }
+
+    public function isDead() {
+        return (state == Dead);
     }
 }

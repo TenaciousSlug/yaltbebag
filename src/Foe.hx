@@ -17,6 +17,7 @@ class Foe extends h2d.Object {
     static var runningSpeed = 70.0;
     static var runningAnimationSpeed = 12;
     static var lookingDelay = 2.0;
+    static var killDistanceSq = 25.0;
 
     var game: Game;
 
@@ -189,5 +190,13 @@ class Foe extends h2d.Object {
             case [Walking, Up]: anim.play(walkingUp, 0);
             case [Walking, Down]: anim.play(walkingDown, 0);
         }
+    }
+
+    public function isNearHero() {
+        var dx = game.hero.x - this.x;
+        var dy = game.hero.y - this.y;
+        var distanceSq = dx*dx + dy*dy;
+
+        return (distanceSq < killDistanceSq);
     }
 }

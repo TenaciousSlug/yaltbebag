@@ -32,6 +32,12 @@ class Game extends h2d.Layers {
         fire.update(dt);
         foe.update(dt);
 
+        if (foe.isNearHero() || fire.isDead()) {
+            this.end();
+        }
+
         this.ysort(1);
     }
+
+    public dynamic function end() {}
 }

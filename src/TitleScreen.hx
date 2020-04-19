@@ -1,5 +1,5 @@
 class TitleScreen extends h2d.Object {
-    public function new(startGame: () -> Void) {
+    public function new() {
         super();
 
         var title = new h2d.Bitmap(hxd.Res.title_screen.background.toTile(), this);
@@ -21,7 +21,9 @@ class TitleScreen extends h2d.Object {
             startButton.tile = startButtonTile;
         }
         startButtonInteractive.onClick = function (event: hxd.Event) {
-            startGame();
+            this.start();
         }
     }
+
+    public dynamic function start() {}
 }

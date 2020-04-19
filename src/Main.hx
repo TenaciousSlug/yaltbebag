@@ -6,8 +6,10 @@ class Main extends hxd.App {
         s2d.scaleMode = h2d.ScaleMode.Fixed(320, 180, 2);
         hxd.Res.initEmbed();
 
-        titleScreen = new TitleScreen(this.startGame);
+        titleScreen = new TitleScreen();
+        titleScreen.start = this.startGame;
         game = new Game();
+        game.end = this.endGame;
 
         //s2d.addChild(titleScreen);
         startGame();
