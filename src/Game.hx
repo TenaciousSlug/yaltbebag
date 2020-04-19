@@ -23,6 +23,9 @@ class Game extends h2d.Layers {
     public var fader: h2d.Graphics;
     public var state: GameState;
 
+    public var blowSound: hxd.res.Sound;
+    public var fireSound: hxd.res.Sound;
+
     public function new(previousScore: String) {
         super();
 
@@ -89,6 +92,12 @@ class Game extends h2d.Layers {
         hero.filter = filter;
         foesSpawner.filter = filter;
         level.foreground.filter = filter;
+
+        if(hxd.res.Sound.supportedFormat(Wav)){
+            blowSound = hxd.Res.sounds.blow;
+            fireSound = hxd.Res.sounds.fire;
+            fireSound.play(true);
+        }
     }
 
     public function hideTitle() {
@@ -122,10 +131,16 @@ class Game extends h2d.Layers {
             end('You survived\nfor $time');
         }
 
+        var blow = Key.isPressed(Key.SPACE) && level.isNearFire(hero.x, hero.y);
+
         hero.update(dt);
         foesSpawner.update(dt);
-        fire.update(dt, Key.isPressed(Key.SPACE) && level.isNearFire(hero.x, hero.y));
+        fire.update(dt, blow);
         timer.update(dt);
+
+        if (blow && blowSound != null) {
+            blowSound.play();
+        }
     }
 
     public function updateBeforeStart(dt: Float) {
@@ -162,6 +177,10 @@ class Game extends h2d.Layers {
         if (blow) {
             fire.magicBlow();
             helpMessage.text = "";
+
+            if (blow && blowSound != null) {
+                blowSound.play();
+            }
 
             startGame();
             return;
