@@ -10,7 +10,7 @@ class Game extends h2d.Layers {
     public function new() {
         super();
 
-        paused = true;
+        paused = false;
         level = new Level();
 
         fire = new Fire(this);

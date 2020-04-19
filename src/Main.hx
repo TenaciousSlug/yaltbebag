@@ -8,29 +8,30 @@ class Main extends hxd.App {
 
         titleScreen = new TitleScreen();
         titleScreen.start = this.startGame;
-        game = new Game();
-        game.end = this.endGame;
 
         //s2d.addChild(titleScreen);
         startGame();
     }
 
     private function startGame() {
-        game.paused = false;
+        game = new Game();
+        game.end = this.endGame;
 
         s2d.removeChild(titleScreen);
         s2d.addChild(game);
     }
 
     private function endGame() {
-        game.paused = true;
-
         s2d.removeChild(game);
         s2d.addChild(titleScreen);
+
+        game = null;
     }
 
     override function update(dt: Float) {
-        game.update(dt);
+        if (game != null) {
+            game.update(dt);
+        }
     }
 
     static function main() {
