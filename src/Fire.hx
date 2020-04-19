@@ -9,6 +9,7 @@ class Fire {
     static var speed = 100.0 / 20.0;
     static var blowStrength = 2.0;
     static var animationSpeed = 6;
+    static var blowAnimationSpeed = 20;
 
     var game: Game;
 
@@ -48,10 +49,13 @@ class Fire {
         ];
 
         anim = new h2d.Anim(animationSpeed);
-        wood = new h2d.Bitmap(tiles.sub(0, 352, 32, 32, -16, -27));
-
         anim.x = game.level.nearFire.x;
         anim.y = game.level.nearFire.y;
+        anim.onAnimEnd = function() {
+            anim.speed = Math.ffloor(animationSpeed + (anim.speed - animationSpeed) / 2);
+        }
+
+        wood = new h2d.Bitmap(tiles.sub(0, 352, 32, 32, -16, -27));
         wood.x = game.level.nearFire.x;
         wood.y = game.level.nearFire.y;
 
@@ -96,6 +100,7 @@ class Fire {
     public function blow() {
         if (state != Dead) {
             strength += blowStrength;
+            anim.speed = blowAnimationSpeed;
         }
     }
 
