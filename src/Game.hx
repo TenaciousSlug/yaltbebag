@@ -26,8 +26,10 @@ class Game extends h2d.Layers {
     public var blowSound: hxd.res.Sound;
     public var fireChannel: hxd.snd.Channel;
 
-    public function new(previousScore: String) {
+    public function new(fireChannel: hxd.snd.Channel, previousScore: String) {
         super();
+
+        this.fireChannel = fireChannel;
 
         state = WaitingToStart;
         if (previousScore == "") {
@@ -95,9 +97,6 @@ class Game extends h2d.Layers {
 
         if(hxd.res.Sound.supportedFormat(Wav)){
             blowSound = hxd.Res.sounds.blow;
-            var fireSound = hxd.Res.sounds.fire;
-            fireChannel = fireSound.play(true);
-            fireChannel.volume = 1.0;
         }
     }
 
@@ -125,7 +124,7 @@ class Game extends h2d.Layers {
         this.ysort(1);
         lightShader.strength = fire.strength / 100;
         if (fireChannel != null) {
-            fireChannel.volume = fire.strength / 100;
+            fireChannel.volume = fire.strength / 150;
         }
     }
 
@@ -195,7 +194,7 @@ class Game extends h2d.Layers {
 
     public function playBlowSound() {
         if (blowSound != null) {
-            blowSound.play(0.5);
+            blowSound.play(0.3);
         }
     }
 
