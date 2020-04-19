@@ -5,41 +5,55 @@ enum FireState {
     Dead;
 }
 
-class Fire extends h2d.Object {
+class Fire {
     static var speed = 100.0 / 20.0;
     static var blowStrength = 2.0;
-    static var animationSpeed = 10;
+    static var animationSpeed = 6;
 
     var game: Game;
 
-    var anim: h2d.Anim;
+    public var anim: h2d.Anim;
     var strong: Array<h2d.Tile>;
     var medium: Array<h2d.Tile>;
     var weak: Array<h2d.Tile>;
+    var dead: Array<h2d.Tile>;
+
+    public var wood: h2d.Bitmap;
 
     public var strength: Float;
     var state: FireState;
 
     public function new(game: Game) {
-        super();
         this.game = game;
 
         var tiles = hxd.Res.atlas.toTile();
 
         strong = [
-            tiles.sub(0, 256, 32, 32, -16, -27),
+            for (i in 0...4) {
+                tiles.sub(i * 32, 256, 32, 32, -16, -27);
+            }
         ];
         medium = [
-            tiles.sub(0, 288, 32, 32, -16, -27),
+            for (i in 0...4) {
+                tiles.sub(i * 32, 288, 32, 32, -16, -27);
+            }
         ];
         weak = [
-            tiles.sub(0, 320, 32, 32, -16, -27),
+            for (i in 0...4) {
+                tiles.sub(i * 32, 320, 32, 32, -16, -27);
+            }
+        ];
+        dead = [
+            tiles.sub(32, 352, 32, 32, -16, -27)
         ];
 
         anim = new h2d.Anim(animationSpeed);
+        wood = new h2d.Bitmap(tiles.sub(0, 352, 32, 32, -16, -27));
 
-        this.x = game.level.nearFire.x;
-        this.y = game.level.nearFire.y;
+        anim.x = game.level.nearFire.x;
+        anim.y = game.level.nearFire.y;
+        wood.x = game.level.nearFire.x;
+        wood.y = game.level.nearFire.y;
 
         strength = 100;
         state = Strong;
@@ -71,15 +85,11 @@ class Fire extends h2d.Object {
     }
 
     private function setAnim() {
-        if (state != Dead && anim.parent == null) {
-            this.addChild(anim);
-        }
-
         switch state {
-            case Strong: anim.play(strong, 0);
-            case Medium: anim.play(medium, 0);
-            case Weak: anim.play(weak, 0);
-            case Dead: anim.remove();
+            case Strong: anim.play(strong);
+            case Medium: anim.play(medium);
+            case Weak: anim.play(weak);
+            case Dead: anim.play(dead);
         }
     }
 
