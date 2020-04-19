@@ -13,7 +13,7 @@ class Level {
         background = new h2d.Bitmap(hxd.Res.level.background.toTile());
         foreground = new h2d.Bitmap(hxd.Res.level.foreground.toTile());
 
-        nearFire = new h2d.col.Circle(160, 90, 12);
+        nearFire = new h2d.col.Circle(160, 90, 16);
 
         walls = new h2d.col.Polygons([
             new h2d.col.Polygon([

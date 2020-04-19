@@ -7,7 +7,7 @@ enum FireState {
 
 class Fire {
     static var speed = 100.0 / 20.0;
-    static var blowStrength = 2.0;
+    static var blowStrength = 3.0;
     static var animationSpeed = 6;
     static var blowAnimationSpeed = 20;
 
@@ -64,10 +64,17 @@ class Fire {
         setAnim();
     }
 
-    public function update(dt: Float) {
+    public function update(dt: Float, blow: Bool) {
         var previousState = state;
 
-        strength -= speed * dt;
+        if (state != Dead) {
+            if (blow) {
+                strength += blowStrength;
+                anim.speed = blowAnimationSpeed;
+            } else {
+                strength -= speed * dt;
+            }
+        }
 
         if (strength <= 0) {
             strength = 0;
@@ -88,19 +95,19 @@ class Fire {
         }
     }
 
+    public function magicBlow() {
+        strength = 100;
+        anim.speed = blowAnimationSpeed;
+        state = Strong;
+        setAnim();
+    }
+
     private function setAnim() {
         switch state {
             case Strong: anim.play(strong);
             case Medium: anim.play(medium);
             case Weak: anim.play(weak);
             case Dead: anim.play(dead);
-        }
-    }
-
-    public function blow() {
-        if (state != Dead) {
-            strength += blowStrength;
-            anim.speed = blowAnimationSpeed;
         }
     }
 

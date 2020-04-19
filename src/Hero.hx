@@ -128,10 +128,6 @@ class Hero extends h2d.Object {
             direction = Up;
         }
 
-        if (Key.isPressed(Key.SPACE) && game.level.isNearFire(this.x, this.y)) {
-            game.fire.blow();
-        }
-
         if (state != previousState || direction != previousDirection) {
             setAnim();
         }
