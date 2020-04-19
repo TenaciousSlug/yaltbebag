@@ -113,20 +113,19 @@ class Hero extends h2d.Object {
         this.x += actualDx;
         this.y += actualDy;
 
-        if (actualDx > 0) {
+        state = Standing;
+        if (actualDx*actualDx + actualDy*actualDy > 0.01) {
             state = Walking;
+        }
+
+        if (actualDx > 0.1) {
             direction = Right;
-        } else if (actualDx < 0) {
-            state = Walking;
+        } else if (actualDx < -0.1) {
             direction = Left;
-        } else if (actualDy > 0) {
-            state = Walking;
+        } else if (actualDy > 0.1) {
             direction = Down;
-        } else if (actualDy < 0) {
-            state = Walking;
+        } else if (actualDy < -0.1) {
             direction = Up;
-        } else {
-            state = Standing;
         }
 
         if(Key.isPressed(Key.SPACE) && game.level.isNearFire(this.x, this.y)) {

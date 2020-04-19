@@ -158,20 +158,19 @@ class Foe extends h2d.Object {
         this.x += actualDx;
         this.y += actualDy;
 
-        if (actualDx > 0) {
+        animState = Standing;
+        if (actualDx*actualDx + actualDy*actualDy > 0.01) {
             animState = Walking;
+        }
+
+        if (actualDx > 0.1) {
             direction = Right;
-        } else if (actualDx < 0) {
-            animState = Walking;
+        } else if (actualDx < -0.1) {
             direction = Left;
-        } else if (actualDy > 0) {
-            animState = Walking;
+        } else if (actualDy > 0.1) {
             direction = Down;
-        } else if (actualDy < 0) {
-            animState = Walking;
+        } else if (actualDy < -0.1) {
             direction = Up;
-        } else {
-            animState = Standing;
         }
 
         if (animState != previousAnimState || direction != previousDirection) {
