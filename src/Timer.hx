@@ -11,16 +11,20 @@ class Timer extends h2d.Text {
         this.text = "0:00";
     }
 
-    public function update(dt: Float) {
-        time += dt;
-
+    public function getText(): String {
         var seconds = Std.int(time) % 60;
         var minutes = Std.int(time / 60);
 
         if (seconds < 10) {
-            this.text = '$minutes:0$seconds';
+            return '$minutes:0$seconds';
         } else {
-            this.text = '$minutes:$seconds';
+            return '$minutes:$seconds';
         }
+    }
+
+    public function update(dt: Float) {
+        time += dt;
+
+        this.text = this.getText();
     }
 }

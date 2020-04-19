@@ -68,11 +68,11 @@ class Hero extends h2d.Object {
 
         anim = new h2d.Anim(animationSpeed, this);
 
-        this.x = 160;
-        this.y = 140;
+        this.x = 180;
+        this.y = 92;
 
         state = Standing;
-        direction = Right;
+        direction = Left;
         setAnim();
     }
 
@@ -128,7 +128,7 @@ class Hero extends h2d.Object {
             direction = Up;
         }
 
-        if(Key.isPressed(Key.SPACE) && game.level.isNearFire(this.x, this.y)) {
+        if (Key.isPressed(Key.SPACE) && game.level.isNearFire(this.x, this.y)) {
             game.fire.blow();
         }
 

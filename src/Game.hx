@@ -1,3 +1,5 @@
+import hxd.Key;
+
 class Game extends h2d.Layers {
     public var paused: Bool;
 
@@ -7,11 +9,13 @@ class Game extends h2d.Layers {
     public var foe: Foe;
     public var timer: Timer;
     public var lightShader: LightShader;
+    public var title: h2d.Bitmap;
+    public var spaceToStart: h2d.Text;
 
     public function new() {
         super();
 
-        paused = false;
+        paused = true;
         level = new Level();
 
         fire = new Fire(this);
@@ -19,13 +23,23 @@ class Game extends h2d.Layers {
         foe = new Foe(this);
         timer = new Timer();
 
+        title = new h2d.Bitmap(hxd.Res.title.toTile());
+
+        var font : h2d.Font = hxd.res.DefaultFont.get();
+        spaceToStart = new h2d.Text(font);
+        spaceToStart.text = "Press SPACE to start";
+        spaceToStart.textAlign = Center;
+        spaceToStart.textColor = 0x00000000;
+        spaceToStart.x = 160;
+        spaceToStart.y = 156;
+
         this.add(level.background, 0);
         this.add(fire.wood, 0);
         this.add(fire.anim, 1);
         this.add(hero, 1);
-        this.add(foe, 1);
         this.add(level.foreground, 2);
-        this.add(timer, 3);
+        this.add(title, 3);
+        this.add(spaceToStart, 3);
 
         lightShader = new LightShader();
         lightShader.strength = 1.0;
@@ -38,8 +52,19 @@ class Game extends h2d.Layers {
         level.foreground.filter = filter;
     }
 
+    public function start() {
+        this.add(foe, 1);
+        this.add(timer, 3);
+        this.removeChild(title);
+        this.removeChild(spaceToStart);
+        paused = false;
+    }
+
     public function update(dt: Float) {
         if (paused) {
+            if (Key.isPressed(Key.SPACE)) {
+                this.start();
+            }
             return;
         }
 
