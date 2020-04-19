@@ -1,6 +1,7 @@
 class Level {
     var walls: h2d.col.Polygons;
-    public var fire: h2d.col.Circle;
+    var fire: h2d.col.Polygon;
+    public var nearFire: h2d.col.Circle;
 
     public var background: h2d.Bitmap;
     public var foreground: h2d.Bitmap;
@@ -12,7 +13,7 @@ class Level {
         background = new h2d.Bitmap(hxd.Res.level.background.toTile());
         foreground = new h2d.Bitmap(hxd.Res.level.foreground.toTile());
 
-        fire = new h2d.col.Circle(160, 90, 12);
+        nearFire = new h2d.col.Circle(160, 90, 12);
 
         walls = new h2d.col.Polygons([
             new h2d.col.Polygon([
@@ -43,12 +44,13 @@ class Level {
                 new h2d.col.Point(232 + 5, 128),
                 new h2d.col.Point(232 + 5, 56),
             ]),
-            new h2d.col.Polygon([
-                new h2d.col.Point(156 - 5, 84),
-                new h2d.col.Point(156 - 5, 93 + 2),
-                new h2d.col.Point(162 + 5, 93 + 2),
-                new h2d.col.Point(162 + 5, 84),
-            ]),
+        ]);
+
+        fire = new h2d.col.Polygon([
+            new h2d.col.Point(156 - 5, 84),
+            new h2d.col.Point(156 - 5, 93 + 2),
+            new h2d.col.Point(162 + 5, 93 + 2),
+            new h2d.col.Point(162 + 5, 84),
         ]);
 
         patrolPoints = [
@@ -85,16 +87,17 @@ class Level {
         ];
     }
 
-    public function checkCollision(x: Float, y: Float): Bool {
+    public function checkCollision(x: Float, y: Float, canWalkThroughFire: Bool): Bool {
         if (x <= 5 || x >= 320 - 5 || y <= 0 || y >= 180) {
             return true;
         }
 
-        return walls.contains(new h2d.col.Point(x, y));
+        var p = new h2d.col.Point(x, y);
+        return (!canWalkThroughFire && fire.contains(p)) || walls.contains(p);
     }
 
     public function isNearFire(x: Float, y: Float): Bool {
-        return fire.contains(new h2d.col.Point(x, y));
+        return nearFire.contains(new h2d.col.Point(x, y));
     }
 
     public function obstructed(ray: h2d.col.Ray): Bool {

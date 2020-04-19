@@ -38,8 +38,8 @@ class Fire extends h2d.Object {
 
         anim = new h2d.Anim(animationSpeed);
 
-        this.x = game.level.fire.x;
-        this.y = game.level.fire.y;
+        this.x = game.level.nearFire.x;
+        this.y = game.level.nearFire.y;
 
         strength = 100;
         state = Strong;
