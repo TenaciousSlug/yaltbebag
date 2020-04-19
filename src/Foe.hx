@@ -92,13 +92,16 @@ class Foe extends h2d.Object {
         var previousAnimState = animState;
         var previousDirection = direction;
 
-        // TODO: check if the hero is too close
-
         // Look for the hero
         var ray = new h2d.col.Ray(
             new h2d.col.Point(this.x, this.y),
             new h2d.col.Point(game.hero.x, game.hero.y));
-        if (!game.level.obstructed(ray)) {
+        if (!game.level.obstructed(ray) && (
+                (direction == Left && game.hero.x < this.x) ||
+                (direction == Right && game.hero.x > this.x) ||
+                (direction == Up && game.hero.y < this.y) ||
+                (direction == Down && game.hero.y > this.y)
+            )) {
             state = Following(game.hero.x, game.hero.y);
         }
 
@@ -128,10 +131,14 @@ class Foe extends h2d.Object {
                 dy = destY - this.y;
             }
         case Looking(delay):
-            if (delay > lookingDelay / 2) {
-                direction = Right;
-            } else {
+            if (delay > 3 * lookingDelay / 4) {
+                direction = Down;
+            } else if (delay > 2 * lookingDelay / 4) {
                 direction = Left;
+            } else if (delay > lookingDelay / 4) {
+                direction = Up;
+            } else {
+                direction = Right;
             }
             if (delay < 0) {
                 state = Patroling(game.level.closestPatrolPoint(this.x, this.y));
