@@ -1,6 +1,8 @@
 import hxd.Key;
 
 class Game extends h2d.Layers {
+    static var fadeInDuration = 1.0;
+
     public var paused: Bool;
 
     public var level: Level;
@@ -11,6 +13,7 @@ class Game extends h2d.Layers {
     public var lightShader: LightShader;
     public var title: h2d.Bitmap;
     public var spaceToStart: h2d.Text;
+    public var fader: h2d.Graphics;
 
     public function new() {
         super();
@@ -29,9 +32,14 @@ class Game extends h2d.Layers {
         spaceToStart = new h2d.Text(font);
         spaceToStart.text = "Press SPACE to start";
         spaceToStart.textAlign = Center;
-        spaceToStart.textColor = 0x00000000;
+        spaceToStart.textColor = 0x000000;
         spaceToStart.x = 160;
         spaceToStart.y = 156;
+
+        fader = new h2d.Graphics();
+        fader.beginFill(0x000000);
+        fader.drawRect(0, 0, 320, 180);
+        fader.endFill();
 
         this.add(level.background, 0);
         this.add(fire.wood, 0);
@@ -40,6 +48,7 @@ class Game extends h2d.Layers {
         this.add(level.foreground, 2);
         this.add(title, 3);
         this.add(spaceToStart, 3);
+        this.add(fader, 4);
 
         lightShader = new LightShader();
         lightShader.strength = 1.0;
@@ -57,11 +66,13 @@ class Game extends h2d.Layers {
         this.add(timer, 3);
         this.removeChild(title);
         this.removeChild(spaceToStart);
+        this.removeChild(fader);
         paused = false;
     }
 
     public function update(dt: Float) {
         if (paused) {
+            fader.alpha = Math.max(0, fader.alpha - dt / fadeInDuration);
             if (Key.isPressed(Key.SPACE)) {
                 this.start();
             }
