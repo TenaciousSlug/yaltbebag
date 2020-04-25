@@ -4,6 +4,8 @@ This is my entry to the Ludum Dare 46 Game Jam.
 
 Theme : Keep it alive
 
+![Game screenshot](data/original_assets/yaltebag.gif "You are likely to be eaten by a grue")
+
 ### Credits
 
  - Made with [Heaps](https://heaps.io/).
